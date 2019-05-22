@@ -295,36 +295,36 @@ describe('Part of the object is given', function() {
     expect((department as any).pet.getLike()).toContain('Tom likes milk');
   });
   it('Existing value shoud not be overridden if there is no value exist in given json', async function() {
-	const department: Department = new Department();
-	const tags = ['tag1', 'tag2'];
-	department.tags = tags;
-	delete data.tags;
+    const department: Department = new Department();
+    const tags = ['tag1', 'tag2'];
+    department.tags = tags;
+    delete data.tags;
     const result = await new JsonMix(data, department).withObject({ type: Department }).build();
     expect(result).toBe(department);
-	expect(department.getTime()).toContain('Time at Center of the World is');
-	expect( department.tags ).toBe(  tags );
+    expect(department.getTime()).toContain('Time at Center of the World is');
+    expect(department.tags).toBe(tags);
   });
   it('Existing value shoud be overridden if there is value exist in given json', async function() {
-	const department: Department = new Department();
-	const location = 'moon';
-	department.location = location;
-	delete data.tags;
+    const department: Department = new Department();
+    const location = 'moon';
+    department.location = location;
+    delete data.tags;
     const result = await new JsonMix(data, department).withObject({ type: Department }).build();
     expect(result).toBe(department);
-	expect( department.location ).toBe( 'Center of the World' );
+    expect(department.location).toBe('Center of the World');
   });
   it('Existing inner objects shoud be merged', async function() {
-	const department: Department = new Department();
-	const pet: Pet = new Pet();
-	const petName = 'Kity';
-	pet.name = petName;
-	(department as any).pet = pet;
-	delete data.pet.name;
+    const department: Department = new Department();
+    const pet: Pet = new Pet();
+    const petName = 'Kity';
+    pet.name = petName;
+    (department as any).pet = pet;
+    delete data.pet.name;
     const result = await new JsonMix(data, department).withObject({ type: Department }).build();
-	expect(result).toBe(department);
-	expect(result.pet).toBe(pet);
-	expect(pet.name).toBe(petName);
-	expect(pet.like).toBe('milk');
+    expect(result).toBe(department);
+    expect(result.pet).toBe(pet);
+    expect(pet.name).toBe(petName);
+    expect(pet.like).toBe('milk');
   });
 });
 
@@ -338,16 +338,16 @@ describe('JsonMix - collections- part of the object is given', function() {
   it('Mix every object in root object, using * in the path', async function() {
     const department: Department = new Department();
     const result = await new JsonMix(data, { department: department }).withObject(Department, '*').build();
-	expect(result.employees.getTime()).toContain('Time at Colombo is');
-	expect(result.department).toBe(department);
+    expect(result.employees.getTime()).toContain('Time at Colombo is');
+    expect(result.department).toBe(department);
     expect(department.getTime()).toContain('Time at Center of the World is');
   });
 
   it('Mix array objects', async function() {
     const employee: Employee = new Employee();
     const result = await new JsonMix(data, { employees: [employee] }).withObject(Employee, 'employees').build();
-	expect(result.employees[0].getName()).toContain('John Doe');
-	expect(result.employees[0]).toBe(employee);
+    expect(result.employees[0].getName()).toContain('John Doe');
+    expect(result.employees[0]).toBe(employee);
     expect(employee.getName()).toContain('John Doe');
   });
 
@@ -476,19 +476,19 @@ describe('JsonMix - collections- part of the object is given', function() {
 
   it('Arrays of object should be merged', async function() {
     const employee1 = new Employee(),
-	  employee2 = new Employee();
-	employee1.firstName = 'Andrew';
-	employee1.lastName = 'symen';
-	employee2.firstName = 'Andersan';
-	employee2.lastName = 'Neo';
-	delete data.employees[0].firstName;
-	delete data.employees[1].lastName;
+      employee2 = new Employee();
+    employee1.firstName = 'Andrew';
+    employee1.lastName = 'symen';
+    employee2.firstName = 'Andersan';
+    employee2.lastName = 'Neo';
+    delete data.employees[0].firstName;
+    delete data.employees[1].lastName;
     await new JsonMix(data, { employees: [employee1, employee2] })
       .withObject(Employee, 'employees')
       .withObject(Pet, 'employees.pet')
       .build();
-	expect(employee1.getName()).toEqual('Andrew Doe');
-	expect(employee2.getName()).toEqual('Romeo Neo');
+    expect(employee1.getName()).toEqual('Andrew Doe');
+    expect(employee2.getName()).toEqual('Romeo Neo');
   });
 
   it('Should create more object and add to the Array if Json has more objects', async function() {
@@ -496,10 +496,10 @@ describe('JsonMix - collections- part of the object is given', function() {
     const result = await new JsonMix(data, { employees: [employee1] })
       .withObject(Employee, 'employees')
       .withObject(Pet, 'employees.pet')
-	  .build();
-	expect(result.employees.length).toBe(2);
-	expect(result.employees[0]).toBe(employee1);
-	expect(employee1.getName()).toEqual('John Doe');
-	expect(result.employees[1].getName()).toEqual('Romeo Alfa');
+      .build();
+    expect(result.employees.length).toBe(2);
+    expect(result.employees[0]).toBe(employee1);
+    expect(employee1.getName()).toEqual('John Doe');
+    expect(result.employees[1].getName()).toEqual('Romeo Alfa');
   });
 });
